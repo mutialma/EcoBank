@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoBank Sampah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" defer></script>
+</head>
+<body>
+
+<!-- ═══════════════ AUTH ═══════════════ -->
+<div id="authScreen">
+
+  <!-- LOGIN -->
+  <div id="loginScreen" class="auth-bg">
+    <div class="auth-deco"></div>
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="brand-icon">♻</div>
+        <div class="brand-text">Eco<span>Bank</span></div>
+      </div>
+      <h1 class="auth-heading">Selamat Datang</h1>
+      <p class="auth-sub">Masuk ke sistem bank sampah digital</p>
+
+      <div class="role-pills">
+        <button class="role-pill active" onclick="setRole('user',this)">👤 Nasabah</button>
+        <button class="role-pill" onclick="setRole('admin',this)">🛡️ Admin</button>
+        <button class="role-pill" onclick="setRole('pemasok',this)">🏪 Pemasok</button>
+      </div>
+
+      <div class="field-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="nama@email.com" class="field">
+      </div>
+      <div class="field-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" class="field">
+      </div>
+      <button class="btn-main" id="loginBtn" onclick="doLogin()">Masuk →</button>
+      <p class="auth-toggle" id="loginSwitch">Belum punya akun? <a onclick="showAuth('registerScreen')">Daftar</a></p>
+    </div>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="registerScreen" class="auth-bg hidden">
+    <div class="auth-deco"></div>
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="brand-icon">♻</div>
+        <div class="brand-text">Eco<span>Bank</span></div>
+      </div>
+      <h1 class="auth-heading">Buat Akun</h1>
+      <p class="auth-sub">Bergabung & mulai kelola sampah Anda</p>
+      <div class="field-row">
+        <div class="field-group"><label>Nama Lengkap</label><input class="field" id="regName" placeholder="Nama lengkap"></div>
+        <div class="field-group"><label>No. Telepon</label><input class="field" id="regPhone" placeholder="08xx"></div>
+      </div>
+      <div class="field-group"><label>Email</label><input type="email" class="field" id="regEmail" placeholder="email@contoh.com"></div>
+      <div class="field-row">
+        <div class="field-group"><label>Password</label><input type="password" class="field" id="regPass" placeholder="Min. 6 karakter"></div>
+        <div class="field-group"><label>Alamat</label><input class="field" id="regAddress" placeholder="Alamat"></div>
+      </div>
+      <button class="btn-main" onclick="doRegister()">Daftar Sekarang →</button>
+      <p class="auth-toggle">Sudah punya akun? <a onclick="showAuth('loginScreen')">Masuk</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ APP ═══════════════ -->
+<div id="appScreen" class="hidden">
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon sm">♻</div>
+        <div>
+          <div class="sidebar-brand-name">EcoBank <span>Sampah</span></div>
+          <div class="sidebar-role" id="roleLabel">Dashboard</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+      <div class="sidebar-foot">
+        <div class="sidebar-user">
+          <div class="s-avatar" id="sAvatar">U</div>
+          <div class="s-info">
+            <div class="s-name" id="sName">User</div>
+            <div class="s-role" id="sRole">Nasabah</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="doLogout()">⏏ Keluar</button>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- MAIN -->
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+          <h1 class="topbar-title" id="topbarTitle">Dashboard</h1>
+        </div>
+        <div class="topbar-right">
+          <span class="topbar-date" id="topbarDate"></span>
+          <div class="notif-btn" onclick="showToast('info','Notifikasi','Tidak ada notifikasi baru')">🔔</div>
+        </div>
+      </header>
+      <div class="page" id="pageContent"></div>
+    </main>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- MODAL -->
+<div class="modal-bg hidden" id="modalBg" onclick="closeModalOut(event)">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <h3 class="modal-title" id="modalTitle">Modal</h3>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/pages-user.js"></script>
+<script src="js/pages-admin.js"></script>
+<script src="js/pages-pemasok.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
